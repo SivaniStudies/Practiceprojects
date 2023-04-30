@@ -1,156 +1,305 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-public class calculator implements ActionListener {
-    JFrame frame;
-    JTextField textField;
-    JButton[] numberButtons = new JButton[10];
-    JButton[] functionButtons = new JButton[8];
-    JButton addButton, subButton, mulButton, divButton;
-    JButton decimalButton, equalButton, deleteButton, clearButton;
-    JPanel panel;
-    double num1 = 0, num2 = 0, result = 0;
-    char operator;
-    calculator() {
-        frame = new JFrame("Calculator");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 400);
-        frame.setLayout(null);
-        textField = new JTextField();
-        textField.setBounds(30, 40, 240, 30);
-        textField.setEditable(false);
-        addButton = new JButton("+");
-        subButton = new JButton("-");
-        mulButton = new JButton("*");
-        divButton = new JButton("/");
-        decimalButton = new JButton(".");
-        equalButton = new JButton("=");
-        deleteButton = new JButton("Delete");
-        clearButton = new JButton("Clear");
+import java.awt.*; 
+import java.awt.event.*; 
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JPanel;
+public class calculator extends JFrame implements ActionListener{
+	private JButton delBtn, clearBtn;
+	private JButton NumberBtn[];
+	private JButton functionBtn[];
+	private JButton Add_btn, Sub_btn, Mul_btn, Div_btn, equalBtn, decBtn;
+	private JPanel panel;
+	private JTextField text;
+	private double number, result = 0, current, temp = 0;
+	private char operator = ' ';
+	private int x = 0;
+	private String del= "", str = "";
+	public calculator(){
+		initialize();
+	}
+	private void initialize(){
+		this.setSize(new Dimension(300, 420));
+		this.setLayout(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+		text = new JTextField();
+		text.setSize(new Dimension(250, 40));
+		text.setLocation(new Point(20, 20));
+		text.setFont(new Font("Orbitron", Font.PLAIN, 20));
+		text.setEditable(false);
+		text.setForeground(Color.black);
+		text.setHorizontalAlignment(JTextField.RIGHT);
+		panel = new JPanel();
+		panel.setLayout(new GridLayout(4, 4));
+		panel.setSize(new Dimension(250, 250));
+		panel.setLocation(new Point(20, 70));
 
-        functionButtons[0] = addButton;
-        functionButtons[1] = subButton;
-        functionButtons[2] = mulButton;
-        functionButtons[3] = divButton;
-        functionButtons[4] = decimalButton;
-        functionButtons[5] = equalButton;
-        functionButtons[6] = deleteButton;
-        functionButtons[7] = clearButton;
+		Add_btn = new JButton("+");
+		Sub_btn = new JButton("-");
+		Mul_btn = new JButton("*");
+		Div_btn = new JButton("/");
+		equalBtn = new JButton("=");
+		decBtn = new JButton(".");
 
-        for (int i = 0; i < 8; i++) {
-            functionButtons[i].addActionListener(this);
-            functionButtons[i].setFocusable(false);
-        }
+		clearBtn = new JButton("CE");
+		clearBtn.setLocation(new Point(20, 330));
 
-        for (int i = 0; i < 10; i++) {
-            numberButtons[i] = new JButton(String.valueOf(i));
-            numberButtons[i].addActionListener(this);
-            numberButtons[i].setFocusable(false);
-        }
+		delBtn = new JButton("CLR");
+		delBtn.setLocation(new Point(170, 330));
 
-        deleteButton.setBounds(30, 300, 120, 50);
-        clearButton.setBounds(150, 300, 120, 50);
+		functionBtn = new JButton[8];
 
-        panel = new JPanel();
-        panel.setBounds(30, 100, 240, 180);
-        panel.setLayout(new GridLayout(4, 4, 10, 10));
+		functionBtn[0] = Add_btn;
+		functionBtn[1] = Sub_btn;
+		functionBtn[2] = Mul_btn;
+		functionBtn[3] = Div_btn;
+		functionBtn[4] = equalBtn;
+		functionBtn[5] = delBtn;
+		functionBtn[6] = clearBtn;
+		functionBtn[7] = decBtn;
 
-        panel.add(numberButtons[1]);
-        panel.add(numberButtons[2]);
-        panel.add(numberButtons[3]);
-        panel.add(addButton);
+		for(int i = 0; i < 8; i++){
+			functionBtn[i].setFocusable(false);
+			functionBtn[i].setVerticalTextPosition(JButton.CENTER);
+			functionBtn[i].setHorizontalTextPosition(JButton.CENTER);
+			functionBtn[i].setFont(new Font("Orbitron", Font.PLAIN, 20));
+			functionBtn[i].setSize(new Dimension(100, 30));
+			functionBtn[i].addActionListener(this);
+			functionBtn[i].setForeground(Color.black);
+		}
 
-        panel.add(numberButtons[4]);
-        panel.add(numberButtons[5]);
-        panel.add(numberButtons[6]);
-        panel.add(subButton);
+		NumberBtn = new JButton[10];
 
-        panel.add(numberButtons[7]);
-        panel.add(numberButtons[8]);
-        panel.add(numberButtons[9]);
-        panel.add(mulButton);
+		for(int i= 0; i < 10; i++){
+			NumberBtn[i] = new JButton(String.valueOf(i));
+			NumberBtn[i].setFocusable(false);
+			NumberBtn[i].setFont(new Font("Orbitron", Font.PLAIN, 20));
+			NumberBtn[i].setSize(new Dimension(10, 10));
+			NumberBtn[i].setVerticalTextPosition(JButton.CENTER);
+			NumberBtn[i].setHorizontalTextPosition(JButton.CENTER);
+			NumberBtn[i].addActionListener(this);
+			NumberBtn[i].setForeground(Color.black);
+		}
 
-        panel.add(decimalButton);
-        panel.add(numberButtons[0]);
-        panel.add(equalButton);
-        panel.add(divButton);
+		panel.add(NumberBtn[7]);
+		panel.add(NumberBtn[8]);
+		panel.add(NumberBtn[9]);
+		panel.add(functionBtn[0]);
 
-        frame.add(panel);
-        frame.add(deleteButton);
-        frame.add(clearButton);
-        frame.add(textField);
-        frame.setVisible(true);
-    }
+		panel.add(NumberBtn[6]);
+		panel.add(NumberBtn[5]);
+		panel.add(NumberBtn[4]);
+		panel.add(functionBtn[1]);
 
-    public static void main(String[] args) {
-        calculator calculator = new calculator();
-    }
+		panel.add(NumberBtn[3]);
+		panel.add(NumberBtn[2]);
+		panel.add(NumberBtn[1]);
+		panel.add(functionBtn[2]);
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < 10; i++) {
-            if (e.getSource() == numberButtons[i]) {
-                textField.setText(textField.getText().concat(String.valueOf(i)));
-            }
-        }
+		panel.add(functionBtn[7]);
+		panel.add(NumberBtn[0]);
+		panel.add(functionBtn[4]);
+		panel.add(functionBtn[3]);
 
-        if (e.getSource() == decimalButton) {
-            textField.setText(textField.getText().concat("."));
-        }
+		this.add(functionBtn[6]);
+		this.add(functionBtn[5]);
+		this.add(text);
+		this.add(panel);
+		this.setVisible(true);
+		this.setLocationRelativeTo(null);
+	}
 
-        if (e.getSource() == addButton) {
-            num1 = Double.parseDouble(textField.getText());
-            operator = '+';
-            textField.setText("");
-        }
+	private void operation(char opt, double curr){		
+			switch(operator){
+				case '+':
+					result = number + curr;
+					break;
 
-        if (e.getSource() == subButton) {
-            num1 = Double.parseDouble(textField.getText());
-            operator = '-';
-            textField.setText("");
-        }
+				case '-':
+					result = number - curr;
+					break;
 
-        if (e.getSource() == mulButton) {
-            num1 = Double.parseDouble(textField.getText());
-            operator = '*';
-            textField.setText("");
-        }
+				case '*':
+					result = number * curr;
+					break;
 
-        if (e.getSource() == divButton) {
-            num1 = Double.parseDouble(textField.getText());
-            operator = '/';
-            textField.setText("");
-        }
+				case '/':
+					result = number / curr;
+					break;
+			}
 
-        if (e.getSource() == equalButton) {
-            num2 = Double.parseDouble(textField.getText());
+			text.setText(String.valueOf(result));
+			temp = result;
+			x = 0;
+	}
 
-            switch (operator) {
-                case '+':
-                    result = num1 + num2;
-                    break;
-                case '-':
-                    result = num1 - num2;
-                    break;
-                case '*':
-                    result = num1 * num2;
-                    break;
-                case '/':
-                    result = num1 / num2;
-                    break;
-            }
+	@Override
+	public void actionPerformed(ActionEvent e){
+		//flag = false;		
 
-            textField.setText(String.valueOf(result));
-            num1 = result;
-        }
+		if(e.getSource() == functionBtn[0]){//addition
+			if (!text.getText().isEmpty()) {
+				current = Double.valueOf(text.getText());
+				if(operator != ' ' && operator != '+'){
+					operation(operator, current);
+					operator = ' ';
+				}
 
-        if (e.getSource() == clearButton) {
-            textField.setText("");
-        }
+				current = Double.valueOf(text.getText());
 
-        if (e.getSource() == deleteButton) {
-            String currentText = textField.getText();
-            textField.setText(currentText.substring(0, currentText.length() - 1));
-        }
-    }
+				if(x == 0){
+					temp = current;
+					number = temp;
+					operator = '+';
+					x = 1;
+				}
+				else{
+					number = temp;				
+					result = number + current;
+					text.setText(String.valueOf(result));
+					temp = result;
+					x = 1;
+				}
+			}			
+		}
+
+		if(e.getSource() == functionBtn[1]){//substration
+			if(!text.getText().isEmpty()){
+				current = Double.valueOf(text.getText());
+				if(operator != ' ' && operator != '-'){
+					operation(operator, current);
+					operator = ' ';
+				}
+
+				current = Double.valueOf(text.getText());
+
+				if(x == 0){
+					temp = current;
+					number = temp;
+					operator = '-';
+					x = 1;
+
+				}
+				else{
+					number = temp;				
+					result = number - current;
+					text.setText(String.valueOf(result));
+					temp = result;
+					x = 1;
+				}
+			}			
+		}
+
+		if(e.getSource() == functionBtn[2]){//multiplication
+			if(!text.getText().isEmpty()){
+				current = Double.valueOf(text.getText());
+				if(operator != ' ' && operator != '*'){
+					operation(operator, current);
+					operator = ' ';
+				}
+
+				current = Double.valueOf(text.getText());
+
+				if(x == 0){
+					temp = current;
+					number = temp;
+					operator = '*';
+					x = 1;
+				}
+				else{
+					number = temp;				
+					result = number * current;
+					text.setText(String.valueOf(result));
+					temp = result;
+					x = 1;
+				}
+			}			
+		}
+
+		if(e.getSource() == functionBtn[3]){//division
+			if(!text.getText().isEmpty()){
+				current = Double.valueOf(text.getText());
+				if(operator != ' ' && operator != '/'){
+					operation(operator, current);
+					operator = ' ';
+				}
+
+				current = Double.valueOf(text.getText());
+
+				if(x == 0){
+					temp = current;
+					number = temp;
+					operator = '/';
+					x = 1;
+				}
+				else{
+					number = temp;				
+					result = number / current;
+					text.setText(String.valueOf(result));
+					temp = result;
+					x = 1;
+				}
+			}		
+		}
+
+		if(e.getSource() == functionBtn[4]){// equals operation	
+			if(!text.getText().isEmpty()){
+				current = Double.valueOf(text.getText());
+				operation(operator, current);
+				operator = ' ';
+			}			
+		}
+
+		if(e.getSource() == functionBtn[5]){// del function
+			text.setText("");			
+		}
+
+		if(e.getSource() == functionBtn[6]){// clear function
+			result = 0;
+			x = 0;
+			temp = 0;
+			number = 0;
+			operator = ' ';
+			text.setText("");
+		}
+
+		if(e.getSource() == functionBtn[7]){ // decimal function 
+			
+				if(x == 1){
+					text.setText("");
+
+					if(!text.getText().contains(".")){
+						text.setText(text.getText().concat("."));
+					}
+
+					x = 0;
+				}else{
+					if(!text.getText().contains(".")){
+						text.setText(text.getText().concat("."));
+					}
+				}
+			
+		}
+
+		for(int i = 0; i < 10; i++){ // number button
+			if(e.getSource() == NumberBtn[i]){
+				if(x == 1){
+					text.setText("");
+					text.setText(text.getText().concat(String.valueOf(i)));
+					x = 2;
+				}else{
+					text.setText(text.getText().concat(String.valueOf(i)));
+				}
+				
+				
+			}
+		}
+
+	}
+
+	public static void main(String args[]){
+		new calculator();
+	}
+
 }
