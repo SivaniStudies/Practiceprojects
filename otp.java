@@ -5,43 +5,55 @@ import javax.swing.*;
 
 public class otp extends JFrame implements ActionListener {
     
-    private JTextField otpField;
-    private JTextField verifyField; // new field to input verification code
-    private JButton generateButton;
-    private JButton verifyButton; // new button to verify OTP
+    private JTextField otpField, verifyOtpField;
+    private JButton generateButton, verifyButton;
+    private JLabel otpLabel, verifyOtpLabel;
     
     public otp() {
         setTitle("OTP Generator");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        otpField = new JTextField(20);
+        // Create OTP label and text field
+        otpLabel = new JLabel("OTP: ");
+        otpLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        otpField = new JTextField(4);
         otpField.setEditable(false);
-        otpField.setHorizontalAlignment(JTextField.CENTER);
-        otpField.setFont(new Font("Arial", Font.PLAIN, 24));
+        otpField.setFont(new Font("Arial", Font.PLAIN, 18));
+        otpField.setBackground(new Color(255, 228, 225)); // Set background color to ffe4e1
         
+        // Create verify OTP label and text field
+        verifyOtpLabel = new JLabel("Verify OTP: ");
+        verifyOtpLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        verifyOtpField = new JTextField(4);
+        verifyOtpField.setFont(new Font("Arial", Font.PLAIN, 18));
+        verifyOtpField.setBackground(new Color(255, 228, 225)); // Set background color to ffe4e1
+        
+        // Create generate button
         generateButton = new JButton("Generate OTP");
         generateButton.addActionListener(this);
         generateButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        generateButton.setBackground(new Color(255, 198, 197)); // Set button color to offc6c85
+        generateButton.setForeground(Color.BLACK); // Set button text color to black
         
-        verifyField = new JTextField(4); // new verification field with 4-digit limit
+        // Create verify button
         verifyButton = new JButton("Verify OTP");
         verifyButton.addActionListener(this);
+        verifyButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        verifyButton.setBackground(new Color(255, 198, 197)); // Set button color to offc6c85
+        verifyButton.setForeground(Color.BLACK); // Set button text color to black
         
-        JPanel otpPanel = new JPanel(new BorderLayout());
-        otpPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        otpPanel.add(otpField, BorderLayout.CENTER);
-        otpPanel.add(generateButton, BorderLayout.SOUTH);
+        // Create panel and add components
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setBackground(new Color(255, 228, 225)); // Set background color to ffe4e1
+        panel.add(otpLabel);
+        panel.add(otpField);
+        panel.add(verifyOtpLabel);
+        panel.add(verifyOtpField);
+        panel.add(generateButton);
+        panel.add(verifyButton);
         
-        JPanel verifyPanel = new JPanel(new BorderLayout());
-        verifyPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        verifyPanel.add(verifyField, BorderLayout.CENTER);
-        verifyPanel.add(verifyButton, BorderLayout.SOUTH);
-        
-        JPanel mainPanel = new JPanel(new GridLayout(2,1));
-        mainPanel.add(otpPanel);
-        mainPanel.add(verifyPanel);
-        
-        setContentPane(mainPanel);
+        setContentPane(panel);
         pack();
         setLocationRelativeTo(null);
     }
@@ -55,7 +67,7 @@ public class otp extends JFrame implements ActionListener {
     }
     
     private void generateOTP() {
-        int length = 4; // update to 4 digits
+        int length = 4; // Change OTP length to 4 digits
         String numbers = "0123456789";
         Random rndm_method = new Random();
         char[] otp = new char[length];
@@ -63,20 +75,18 @@ public class otp extends JFrame implements ActionListener {
             otp[i] = numbers.charAt(rndm_method.nextInt(numbers.length()));
         }
         otpField.setText(new String(otp));
-        verifyField.setText(""); // clear verification field when new OTP is generated
     }
     
     private void verifyOTP() {
-        String generatedOTP = otpField.getText();
-        String enteredOTP = verifyField.getText();
-        if (generatedOTP.equals(enteredOTP)) {
-            JOptionPane.showMessageDialog(this, "OTP Verified!"); // display message if OTP is correct
+        String otp = otpField.getText();
+        String enteredOtp = verifyOtpField.getText();
+        if (otp.equals(enteredOtp)) {
+            JOptionPane.showMessageDialog(this, "Verification Successful");
         } else {
-            JOptionPane.showMessageDialog(this, "Incorrect OTP, please try again."); // display message if OTP is incorrect
+            JOptionPane.showMessageDialog(this, "Verification Failed");
         }
-        verifyField.setText(""); // clear verification field after verifying OTP
     }
-    
+
     public static void main(String[] args) {
         otp otpGenerator = new otp();
         otpGenerator.setVisible(true);
