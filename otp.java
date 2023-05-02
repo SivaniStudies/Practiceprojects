@@ -6,7 +6,9 @@ import javax.swing.*;
 public class otp extends JFrame implements ActionListener {
     
     private JTextField otpField;
+    private JTextField verifyField; // new field to input verification code
     private JButton generateButton;
+    private JButton verifyButton; // new button to verify OTP
     
     public otp() {
         setTitle("OTP Generator");
@@ -21,12 +23,25 @@ public class otp extends JFrame implements ActionListener {
         generateButton.addActionListener(this);
         generateButton.setFont(new Font("Arial", Font.PLAIN, 18));
         
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panel.add(otpField, BorderLayout.CENTER);
-        panel.add(generateButton, BorderLayout.SOUTH);
+        verifyField = new JTextField(4); // new verification field with 4-digit limit
+        verifyButton = new JButton("Verify OTP");
+        verifyButton.addActionListener(this);
         
-        setContentPane(panel);
+        JPanel otpPanel = new JPanel(new BorderLayout());
+        otpPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        otpPanel.add(otpField, BorderLayout.CENTER);
+        otpPanel.add(generateButton, BorderLayout.SOUTH);
+        
+        JPanel verifyPanel = new JPanel(new BorderLayout());
+        verifyPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        verifyPanel.add(verifyField, BorderLayout.CENTER);
+        verifyPanel.add(verifyButton, BorderLayout.SOUTH);
+        
+        JPanel mainPanel = new JPanel(new GridLayout(2,1));
+        mainPanel.add(otpPanel);
+        mainPanel.add(verifyPanel);
+        
+        setContentPane(mainPanel);
         pack();
         setLocationRelativeTo(null);
     }
@@ -34,11 +49,13 @@ public class otp extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == generateButton) {
             generateOTP();
+        } else if (e.getSource() == verifyButton) {
+            verifyOTP();
         }
     }
     
     private void generateOTP() {
-        int length = 6;
+        int length = 4; // update to 4 digits
         String numbers = "0123456789";
         Random rndm_method = new Random();
         char[] otp = new char[length];
@@ -46,6 +63,18 @@ public class otp extends JFrame implements ActionListener {
             otp[i] = numbers.charAt(rndm_method.nextInt(numbers.length()));
         }
         otpField.setText(new String(otp));
+        verifyField.setText(""); // clear verification field when new OTP is generated
+    }
+    
+    private void verifyOTP() {
+        String generatedOTP = otpField.getText();
+        String enteredOTP = verifyField.getText();
+        if (generatedOTP.equals(enteredOTP)) {
+            JOptionPane.showMessageDialog(this, "OTP Verified!"); // display message if OTP is correct
+        } else {
+            JOptionPane.showMessageDialog(this, "Incorrect OTP, please try again."); // display message if OTP is incorrect
+        }
+        verifyField.setText(""); // clear verification field after verifying OTP
     }
     
     public static void main(String[] args) {
